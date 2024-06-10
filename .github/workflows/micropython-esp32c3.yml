@@ -1,0 +1,28 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Python package
+
+on:
+  schedule:
+    []
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - name: micropython
+      uses: actions/checkout@v4
+      with:
+        repository: micropython/micropython
+        path: micropython
+        ref: v1.23.0 #https://github.com/micropython/micropython/tree/v1.23.0/ports/esp32
+    - name: esp-idf
+      uses: actions/checkout@v4
+      with:
+        repository: espressif/esp-idf
+        path: esp-idf
+        ref: v5.2.0 #https://github.com/micropython/micropython/tree/master/ports/esp32#setting-up-esp-idf-and-the-build-environment
+        submodules: recursive
+    
