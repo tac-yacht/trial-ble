@@ -4,8 +4,7 @@
 name: Python package
 
 on:
-  schedule:
-    []
+  workflow_dispatch:
 
 jobs:
   build:
