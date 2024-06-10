@@ -24,4 +24,10 @@ jobs:
         path: esp-idf
         ref: v5.2 #https://github.com/micropython/micropython/tree/master/ports/esp32#setting-up-esp-idf-and-the-build-environment
         submodules: recursive
-    
+    - name: install dependencies tools
+      # https://micropython-docs-ja.readthedocs.io/ja/latest/develop/gettingstarted.html#required-dependencies
+      # https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/linux-macos-setup.html
+      run: |
+        sudo apt update
+        sudo apt install build-essential libffi-dev git pkg-config
+        sudo apt install wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
