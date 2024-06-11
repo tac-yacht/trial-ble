@@ -46,4 +46,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: firmware
-        path: micropython/ports/esp32/build-ESP32_GENERIC_C3/micropython.bin
+        path: micropython/ports/esp32/build-ESP32_GENERIC_C3/
