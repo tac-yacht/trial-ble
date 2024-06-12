@@ -31,11 +31,14 @@ jobs:
         sudo apt update
         sudo apt install build-essential libffi-dev git pkg-config
         sudo apt install wget flex bison gperf python3 python3-pip python3-venv cmake ninja-build ccache libffi-dev libssl-dev dfu-util libusb-1.0-0
+    - name: install esp-idf
+      run: |
+        cd ${GITHUB_WORKSPACE}/esp-idf
+        ./install.sh
     - name: build-firmware
       # https://github.com/micropython/micropython/tree/v1.23.0/ports/esp32#setting-up-esp-idf-and-the-build-environment
       run: |
         cd ${GITHUB_WORKSPACE}/esp-idf
-        ./install.sh | grep -v -P '^\d+%'
         source export.sh
         cd ${GITHUB_WORKSPACE}/micropython
         make -C mpy-cross
