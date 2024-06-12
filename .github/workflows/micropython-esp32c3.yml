@@ -35,7 +35,7 @@ jobs:
       # https://github.com/micropython/micropython/tree/v1.23.0/ports/esp32#setting-up-esp-idf-and-the-build-environment
       run: |
         cd ${GITHUB_WORKSPACE}/esp-idf
-        ./install.sh
+        ./install.sh | grep -v -P '^\d+%'
         source export.sh
         cd ${GITHUB_WORKSPACE}/micropython
         make -C mpy-cross
