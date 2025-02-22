@@ -53,3 +53,10 @@ jobs:
       with:
         name: firmware
         path: micropython/ports/esp32/build-ESP32_GENERIC_C3/
+  ls:
+    runs-on: ubuntu-24.04
+    - name: ls
+      run: |
+        pwd
+        ll 
+        ll ${GITHUB_WORKSPACE}/cexample/
