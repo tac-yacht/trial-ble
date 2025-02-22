@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    if: false #一時的に無効化
+    #if: false #一時的に無効化
     runs-on: ubuntu-24.04
 
     steps:
@@ -54,7 +54,7 @@ jobs:
         make -C mpy-cross
         cd ports/esp32
         make submodules
-        make BOARD=ESP32_GENERIC_C3 USER_C_MODULES=${GITHUB_WORKSPACE}/WireGuard/micropython.cmake
+        make BOARD=ESP32_GENERIC_C3 USER_C_MODULES=${GITHUB_WORKSPACE}/WireGuard-micropython.cmake
     - name: save firmware
       uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
@@ -63,7 +63,7 @@ jobs:
         path: micropython/ports/esp32/build-ESP32_GENERIC_C3/
   ls:
     runs-on: ubuntu-24.04
-    #if: false #一時的に無効化
+    if: false #一時的に無効化
     steps:
       - name: checkout this
         uses: actions/checkout@v4

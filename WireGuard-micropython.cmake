@@ -3,7 +3,7 @@ add_library(usermod_wireguard INTERFACE)
 
 # Add our source files to the library.
 target_sources(usermod_wireguard INTERFACE
-    ${CMAKE_CURRENT_LIST_DIR}/src/crypto/refc/x25519.c
+    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/x25519.c
 )
 
 # Add the current directory as an include directory.
