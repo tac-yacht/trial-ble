@@ -1,3 +1,7 @@
+//読込テスト
+#include "lwip/arch.h"
+#include "lwip/ip_addr.h"
+
 // Include MicroPython API.
 #include "py/runtime.h"
 
