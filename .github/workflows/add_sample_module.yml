@@ -60,5 +60,5 @@ jobs:
       - name: ls
         run: |
           pwd
-          ll 
-          ll ${GITHUB_WORKSPACE}/cexample/
+          ls -la
+          ls -la ${GITHUB_WORKSPACE}/cexample/
