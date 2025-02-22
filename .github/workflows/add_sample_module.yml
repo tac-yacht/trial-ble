@@ -49,6 +49,7 @@ jobs:
         make BOARD=ESP32_GENERIC_C3 USER_C_MODULES=${GITHUB_WORKSPACE}/cexample
     - name: save firmware
       uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
       with:
         name: firmware
         path: micropython/ports/esp32/build-ESP32_GENERIC_C3/
