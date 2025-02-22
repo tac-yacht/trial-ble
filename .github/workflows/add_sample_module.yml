@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
+    - name: checkout this
+      uses: actions/checkout@v4
     - name: checkout micropython
       uses: actions/checkout@v4
       with:
@@ -57,6 +59,8 @@ jobs:
   ls:
     runs-on: ubuntu-24.04
     steps:
+      - name: checkout this
+        uses: actions/checkout@v4
       - name: ls
         run: |
           pwd
