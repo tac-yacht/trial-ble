@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    if: false #一時的に無効化
+    #if: false #一時的に無効化
     runs-on: ubuntu-24.04
 
     steps:
@@ -58,6 +58,7 @@ jobs:
         path: micropython/ports/esp32/build-ESP32_GENERIC_C3/
   ls:
     runs-on: ubuntu-24.04
+    if: false #一時的に無効化
     steps:
       - name: checkout this
         uses: actions/checkout@v4
