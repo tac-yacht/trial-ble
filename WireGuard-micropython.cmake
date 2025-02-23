@@ -12,4 +12,4 @@ target_include_directories(usermod_wireguard INTERFACE
 )
 
 # Link our INTERFACE library to the usermod target.
-target_link_libraries(wireguard INTERFACE usermod_wireguard)
+target_link_libraries(usermod INTERFACE usermod_wireguard)
