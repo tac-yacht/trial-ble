@@ -56,6 +56,7 @@ jobs:
         sed -i 's/log_i(TAG/ESP_LOGI(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/log_d(TAG/ESP_LOGD(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/log_v(TAG/ESP_LOGV(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
+        sed -i 's/%08x/%08lx/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
     - name: build firmware
       # https://github.com/micropython/micropython/tree/v1.23.0/ports/esp32#setting-up-esp-idf-and-the-build-environment
       run: |
