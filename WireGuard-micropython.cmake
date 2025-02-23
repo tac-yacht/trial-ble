@@ -3,6 +3,10 @@ add_library(usermod_wireguard INTERFACE)
 
 # Add our source files to the library.
 target_sources(usermod_wireguard INTERFACE
+    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/blake2s.c
+    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/chacha20.c
+    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/chacha20poly1305.c
+    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/poly1305-donna.c
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/x25519.c
 )
 
