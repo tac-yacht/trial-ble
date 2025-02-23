@@ -48,6 +48,8 @@ jobs:
     - name: patch
       run: |
         sed -i 's/static void mul(fe out, const fe a, const fe b, unsigned nb) {/static void mul(fe out, const fe a, const limb_t b[], unsigned nb) {/' ${GITHUB_WORKSPACE}/WireGuard/src/crypto/refc/x25519.c
+        sed -i 's/#include "tcpip_adapter.h"/#include "esp_netif.h"/' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
+        sed -i 's/tcpip_adapter_get_netif(TCPIP_ADAPTER_IF_STA, &underlying_netif);/underlying_netif=esp_netif_get_netif_impl(esp_netif_get_handle_from_ifkey("WIFI_STA"));/' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
     - name: build firmware
       # https://github.com/micropython/micropython/tree/v1.23.0/ports/esp32#setting-up-esp-idf-and-the-build-environment
       run: |
