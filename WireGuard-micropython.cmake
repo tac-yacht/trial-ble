@@ -10,7 +10,7 @@ target_sources(usermod_wireguard INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto/refc/x25519.c
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/crypto.c
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/wireguard.c
-#    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/WireGuard.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/WireGuard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/wireguardif.c
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/wireguard-platform.c
 )
