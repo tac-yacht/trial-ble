@@ -9,7 +9,7 @@ static const mp_arg_t begin_args[] = {
 	{MP_QSTR_endpoint_port, MP_ARG_INT|MP_ARG_REQUIRED},
 }
 
-static mp_obj_t begin(size_t n_args, size_tn_kw, const mp_obj_t *args) {
+static mp_obj_t begin(size_t n_args, size_t n_kw, const mp_obj_t *args) {
 	mp_arg_val_t parsed_args[MP_ARRAY_SIZE(begin_args)];
 	mp_arg_parse_all_kw_array(n_args, n_kw, args, MP_ARRAY_SIZE(begin_args), begin_args, parsed_args);
 	
@@ -26,7 +26,7 @@ static mp_obj_t begin(size_t n_args, size_tn_kw, const mp_obj_t *args) {
 	mp_obj_dict_store(result, mp_obj_new_str("public_key"), mp_obj_new_int(arg4));
 	mp_obj_dict_store(result, mp_obj_new_str("endpoint_port"), mp_obj_new_int(arg5));
 	return result;
-}
+};
 
 static MP_DEFINE_CONST_FUN_OBJ_KW(begin_obj, 0, begin);
 
