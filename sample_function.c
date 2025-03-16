@@ -7,7 +7,7 @@ static const mp_arg_t begin_args[] = {
 	{MP_QSTR_endpoint_address, MP_ARG_INT|MP_ARG_REQUIRED},
 	{MP_QSTR_public_key, MP_ARG_INT|MP_ARG_REQUIRED},
 	{MP_QSTR_endpoint_port, MP_ARG_INT|MP_ARG_REQUIRED},
-}
+};
 
 static mp_obj_t begin(size_t n_args, size_t n_kw, const mp_obj_t *args) {
 	mp_arg_val_t parsed_args[MP_ARRAY_SIZE(begin_args)];
