@@ -1,6 +1,8 @@
 // Include MicroPython API.
 #include "py/runtime.h"
 
+#define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
+
 static const mp_arg_t begin_args[] = {
 	{MP_QSTR_local_ip, MP_ARG_INT|MP_ARG_REQUIRED},
 	{MP_QSTR_private_key, MP_ARG_INT|MP_ARG_REQUIRED},
@@ -20,11 +22,11 @@ static mp_obj_t begin(size_t n_args, size_t n_kw, const mp_obj_t *args) {
 	int arg5 = parsed_args[4].u_int;
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
-	mp_obj_dict_store(result, mp_obj_new_str("local_ip"), mp_obj_new_int(arg1));
-	mp_obj_dict_store(result, mp_obj_new_str("private_key"), mp_obj_new_int(arg2));
-	mp_obj_dict_store(result, mp_obj_new_str("endpoint_addess"), mp_obj_new_int(arg3));
-	mp_obj_dict_store(result, mp_obj_new_str("public_key"), mp_obj_new_int(arg4));
-	mp_obj_dict_store(result, mp_obj_new_str("endpoint_port"), mp_obj_new_int(arg5));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_new_int(arg1));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_int(arg2));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_addess"), mp_obj_new_int(arg3));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("public_key"), mp_obj_new_int(arg4));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_port"), mp_obj_new_int(arg5));
 	return result;
 };
 
