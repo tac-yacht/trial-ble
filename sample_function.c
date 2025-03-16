@@ -3,23 +3,24 @@
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
-static const mp_arg_t begin_args[] = {
-	{MP_QSTR_local_ip, MP_ARG_INT|MP_ARG_REQUIRED},
-	{MP_QSTR_private_key, MP_ARG_INT|MP_ARG_REQUIRED},
-	{MP_QSTR_endpoint_address, MP_ARG_INT|MP_ARG_REQUIRED},
-	{MP_QSTR_public_key, MP_ARG_INT|MP_ARG_REQUIRED},
-	{MP_QSTR_endpoint_port, MP_ARG_INT|MP_ARG_REQUIRED},
-};
 
-static mp_obj_t begin(size_t n_args, size_t n_kw, const mp_obj_t *args) {
-	mp_arg_val_t parsed_args[MP_ARRAY_SIZE(begin_args)];
-	mp_arg_parse_all_kw_array(n_args, n_kw, args, MP_ARRAY_SIZE(begin_args), begin_args, parsed_args);
+static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+	static const mp_arg_t allowed_args[] = {
+		{MP_QSTR_local_ip, MP_ARG_INT|MP_ARG_REQUIRED},
+		{MP_QSTR_private_key, MP_ARG_INT|MP_ARG_REQUIRED},
+		{MP_QSTR_endpoint_address, MP_ARG_INT|MP_ARG_REQUIRED},
+		{MP_QSTR_public_key, MP_ARG_INT|MP_ARG_REQUIRED},
+		{MP_QSTR_endpoint_port, MP_ARG_INT|MP_ARG_REQUIRED},
+	};
+
+	mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
+	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 	
-	int arg1 = parsed_args[0].u_int;
-	int arg2 = parsed_args[1].u_int;
-	int arg3 = parsed_args[2].u_int;
-	int arg4 = parsed_args[3].u_int;
-	int arg5 = parsed_args[4].u_int;
+	int arg1 = args[0].u_int;
+	int arg2 = args[1].u_int;
+	int arg3 = args[2].u_int;
+	int arg4 = args[3].u_int;
+	int arg5 = args[4].u_int;
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_new_int(arg1));
