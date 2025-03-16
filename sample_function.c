@@ -46,7 +46,7 @@ static const mp_rom_map_elem_t wireguard_module_globals_table[] = {
 // Define module object.
 const mp_obj_module_t wireguard_cmodule = {
 	.base = { &mp_type_module },
-	.globals = (mp_obj_dict_t *)&wireguard_module_globals,
+	.globals = (mp_obj_dict_t *)&wireguard_module_globals_table,
 };
 
 // Register the module to make it available in Python.
