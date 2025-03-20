@@ -1,10 +1,18 @@
 // Include MicroPython API.
 #include "py/runtime.h"
 #include <string.h>
+#include "lwip/ip_addr.h"
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
-
+static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
+	//TODO バリデーション
+	const char *ipaddr_str = mp_obj_str_get_str(arg.u_obj);
+	ip_addr_t result;
+	ipaddr_aton(ipaddr_str, &result);
+	
+	return result;
+}
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
 		{MP_QSTR_local_ip, MP_ARG_OBJ|MP_ARG_REQUIRED},
