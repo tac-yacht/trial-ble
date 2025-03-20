@@ -14,7 +14,7 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
 	return result;
 }
 static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
-	const char *ipaddr_str = ipaddr_ntoa(src);
+	const char *ipaddr_str = ipaddr_ntoa(&src);
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
 }
 
