@@ -13,6 +13,11 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
 	
 	return result;
 }
+static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
+	const char *ipaddr_str = ipaddr_ntoa(src);
+	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
+}
+
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
 		{MP_QSTR_local_ip, MP_ARG_OBJ|MP_ARG_REQUIRED},
@@ -26,14 +31,14 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
 	//TODO バリデーション
-	const char *local_ip = mp_obj_str_get_str(args[0].u_obj);
+	ip_addr_t *local_ip = ipaddr_from_mp_arg(args[0]);
 	const char *private_key = mp_obj_str_get_str(args[1].u_obj);
 	const char *endpoint_address = mp_obj_str_get_str(args[2].u_obj);
 	const char *public_key = mp_obj_str_get_str(args[3].u_obj);
 	int endpoint_port = args[4].u_int;
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_new_str(local_ip, strlen(local_ip)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(local_ip));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_address"), mp_obj_new_str(endpoint_address, strlen(endpoint_address)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("public_key"), mp_obj_new_str(public_key, strlen(public_key)));
