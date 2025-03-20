@@ -33,16 +33,17 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	//TODO バリデーション
 	ip_addr_t local_ip = ipaddr_from_mp_arg(args[0]);
 	const char *private_key = mp_obj_str_get_str(args[1].u_obj);
-	const char *endpoint_address = mp_obj_str_get_str(args[2].u_obj);
+	ip_addr_t endpoint_address = ipaddr_from_mp_arg(args[2]);
 	const char *public_key = mp_obj_str_get_str(args[3].u_obj);
 	int endpoint_port = args[4].u_int;
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(local_ip));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_address"), mp_obj_new_str(endpoint_address, strlen(endpoint_address)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_address"), mp_obj_from_ipaddr(endpoint_address));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("public_key"), mp_obj_new_str(public_key, strlen(public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_port"), mp_obj_new_int(endpoint_port));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("ip_addr_t型に切り替えテスト中"));
 	return result;
 };
 
