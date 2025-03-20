@@ -31,7 +31,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
 	//TODO バリデーション
-	ip_addr_t *local_ip = ipaddr_from_mp_arg(args[0]);
+	ip_addr_t local_ip = ipaddr_from_mp_arg(args[0]);
 	const char *private_key = mp_obj_str_get_str(args[1].u_obj);
 	const char *endpoint_address = mp_obj_str_get_str(args[2].u_obj);
 	const char *public_key = mp_obj_str_get_str(args[3].u_obj);
