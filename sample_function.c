@@ -26,9 +26,9 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_new_str(local_ip, strlen(local_ip)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_address"), mp_obj_new_str(endpoint_address, strlen(endpoint_address));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("public_key"), mp_obj_new_str(public_key, strlen(public_key));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_address"), mp_obj_new_str(endpoint_address, strlen(endpoint_address)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("public_key"), mp_obj_new_str(public_key, strlen(public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_port"), mp_obj_new_int(endpoint_port));
 	return result;
 };
