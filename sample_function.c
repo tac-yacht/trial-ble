@@ -21,29 +21,35 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
 		{MP_QSTR_local_ip, MP_ARG_OBJ|MP_ARG_REQUIRED},
+		{MP_QSTR_subnet, MP_ARG_OBJ, {.u_obj = NP_OBJ_NEW_STR_LITERAL("255.255.255.255")}},
+		{MP_QSTR_gateway, MP_ARG_OBJ, {.u_obj = NP_OBJ_NEW_STR_LITERAL("0.0.0.0")}},
 		{MP_QSTR_private_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
-		{MP_QSTR_endpoint_address, MP_ARG_OBJ|MP_ARG_REQUIRED},
-		{MP_QSTR_public_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
-		{MP_QSTR_endpoint_port, MP_ARG_INT|MP_ARG_REQUIRED},
+		{MP_QSTR_remote_peer_address, MP_ARG_OBJ|MP_ARG_REQUIRED},
+		{MP_QSTR_remote_peer_public_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
+		{MP_QSTR_remote_peer_port, MP_ARG_INT|MP_ARG_REQUIRED},
 	};
 
 	mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
 	//TODO バリデーション
-	ip_addr_t local_ip = ipaddr_from_mp_arg(args[0]);
-	const char *private_key = mp_obj_str_get_str(args[1].u_obj);
-	ip_addr_t endpoint_address = ipaddr_from_mp_arg(args[2]);
-	const char *public_key = mp_obj_str_get_str(args[3].u_obj);
-	int endpoint_port = args[4].u_int;
+	ip_addr_t ipaddr = ipaddr_from_mp_arg(args[0]);
+	ip_addr_t netmask = ipaddr_from_mp_arg(args[1]);
+	ip_addr_t geteway = ipaddr_from_mp_arg(args[2]);
+	const char *private_key = mp_obj_str_get_str(args[3].u_obj);
+	ip_addr_t remote_peer_address = ipaddr_from_mp_arg(args[4]);
+	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
+	int remote_peer_port = args[6].u_int;
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(local_ip));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(geteway));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_address"), mp_obj_from_ipaddr(endpoint_address));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("public_key"), mp_obj_new_str(public_key, strlen(public_key)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_port"), mp_obj_new_int(endpoint_port));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("ip_addr_t型に切り替えテスト中"));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_from_ipaddr(remote_peer_address));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("デフォルト値設定テスト中"));
 	return result;
 };
 
