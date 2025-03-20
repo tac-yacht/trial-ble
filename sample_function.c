@@ -19,12 +19,10 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 }
 
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
-	const mp_obj_t subnet_default = MP_OBJ_FROM_PTR(mp_obj_new_str("255.255.255.255",15));
-	const mp_obj_t gateway_default = MP_OBJ_FROM_PTR(mp_obj_new_str("0.0.0.0",7));
 	static const mp_arg_t allowed_args[] = {
 		{MP_QSTR_local_ip, MP_ARG_OBJ|MP_ARG_REQUIRED},
-		{MP_QSTR_subnet, MP_ARG_OBJ, {.u_obj = subnet_default}},
-		{MP_QSTR_gateway, MP_ARG_OBJ, {.u_obj = gateway_default}},
+		{MP_QSTR_subnet, MP_ARG_OBJ, {.u_obj = MP_OBJ_NULL}}, //あとで直接指定する方法を調べる
+		{MP_QSTR_gateway, MP_ARG_OBJ, {.u_obj = MP_OBJ_NULL}},
 		{MP_QSTR_private_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
 		{MP_QSTR_remote_peer_address, MP_ARG_OBJ|MP_ARG_REQUIRED},
 		{MP_QSTR_remote_peer_public_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
@@ -33,7 +31,13 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 
 	mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
-
+	//妥協のデフォルト設定（これならしたのところでやっても変わらないが、一応バインドとデフォルト設定は別にしておく
+    if (args[1].u_obj == MP_OBJ_NULL) { //subnet
+        args[1].u_obj = MP_OBJ_NEW_STR("255.255.255.255");
+    }
+    if (args[2].u_obj == MP_OBJ_NULL) { //gateway
+        args[2].u_obj = MP_OBJ_NEW_STR("0.0.0.0");
+    }
 	//TODO バリデーション
 	ip_addr_t ipaddr = ipaddr_from_mp_arg(args[0]);
 	ip_addr_t netmask = ipaddr_from_mp_arg(args[1]);
