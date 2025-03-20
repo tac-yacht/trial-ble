@@ -21,8 +21,8 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
 		{MP_QSTR_local_ip, MP_ARG_OBJ|MP_ARG_REQUIRED},
-		{MP_QSTR_subnet, MP_ARG_OBJ, {.u_obj = NP_OBJ_NEW_STR_LITERAL("255.255.255.255")}},
-		{MP_QSTR_gateway, MP_ARG_OBJ, {.u_obj = NP_OBJ_NEW_STR_LITERAL("0.0.0.0")}},
+		{MP_QSTR_subnet, MP_ARG_OBJ, {.u_obj = MP_OBJ_NEW_STR_LITERAL("255.255.255.255")}},
+		{MP_QSTR_gateway, MP_ARG_OBJ, {.u_obj = MP_OBJ_NEW_STR_LITERAL("0.0.0.0")}},
 		{MP_QSTR_private_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
 		{MP_QSTR_remote_peer_address, MP_ARG_OBJ|MP_ARG_REQUIRED},
 		{MP_QSTR_remote_peer_public_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
