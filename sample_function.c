@@ -1,7 +1,7 @@
 // Include MicroPython API.
 #include "py/runtime.h"
 #include <string.h>
-#include "WireGuard/src/wireguardif.h"
+#include "WireGuard/src/wireguardif.h" //TODO 構成変更するとずれるので要検討
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
@@ -59,8 +59,8 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	struct wireguardif_peer peer;
 
 	// Setup the WireGuard device structure
-	wg.private_key = privateKey;
-    wg.listen_port = remotePeerPort;
+	wg.private_key = private_key;
+    wg.listen_port = remote_peer_port;
 	
 	wg.bind_netif = NULL;
 
