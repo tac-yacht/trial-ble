@@ -142,6 +142,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 		// Start outbound connection to peer
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("log"), MP_OBJ_NEW_STR("connecting wireguard..."));
 		err_t connect_result = wireguardif_connect(wg_netif, wireguard_peer_index);
+		printf("connect_result raw value: %d\n", connect_result);
 		const char* connect_result_str = lwip_strerr(connect_result);
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("connect_result"), mp_obj_new_str(connect_result_str, strlen(connect_result_str)));
 		// Save the current default interface for restoring when shutting down the WG interface.
