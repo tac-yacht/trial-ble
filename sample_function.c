@@ -5,6 +5,7 @@
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
+//utility
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
 	//TODO バリデーション
 	const char *ipaddr_str = mp_obj_str_get_str(arg.u_obj);
@@ -17,6 +18,12 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	const char *ipaddr_str = ipaddr_ntoa(&src);
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
 }
+
+// Wireguard instance
+static struct netif wg_netif_struct = {0};
+static struct netif *wg_netif = NULL;
+static struct netif *previous_default_netif = NULL;
+static uint8_t wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
 
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
@@ -31,7 +38,8 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 
 	mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
-	//妥協のデフォルト設定（これならしたのところでやっても変わらないが、一応バインドとデフォルト設定は別にしておく
+
+	//妥協のデフォルト設定（これなら下のバインドのところでやっても変わらないが、一応バインドとデフォルト設定は別にしておく
     if (args[1].u_obj == MP_OBJ_NULL) { //subnet
         args[1].u_obj = MP_OBJ_NEW_STR("255.255.255.255");
     }
@@ -46,6 +54,18 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	ip_addr_t remote_peer_address = ipaddr_from_mp_arg(args[4]);
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
 	int remote_peer_port = args[6].u_int;
+
+	struct wireguardif_init_data wg;
+	struct wireguardif_peer peer;
+
+	// Setup the WireGuard device structure
+	wg.private_key = privateKey;
+    wg.listen_port = remotePeerPort;
+	
+	wg.bind_netif = NULL;
+
+	// Initialise the first WireGuard peer structure
+	wireguardif_peer_init(&peer);
 	
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
