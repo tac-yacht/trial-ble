@@ -8,7 +8,9 @@
 #include "lwip/ip.h"
 #include "lwip/netdb.h"
 
-#include "WireGuard/src/wireguardif.h" //TODO 構成変更するとずれるので要検討
+//TODO 構成変更するとずれるので要検討
+#include "WireGuard/src/wireguardif.h"
+#include "WireGuard/src/wireguard-platform.h"
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
