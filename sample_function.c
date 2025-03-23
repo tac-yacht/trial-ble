@@ -7,6 +7,7 @@
 
 #include "lwip/ip.h"
 #include "lwip/netdb.h"
+#include "lwip/err.h"
 
 //TODO 構成変更するとずれるので要検討
 #include "WireGuard/src/wireguardif.h"
@@ -140,7 +141,9 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	if ((wireguard_peer_index != WIREGUARDIF_INVALID_INDEX) && !ip_addr_isany(&peer.endpoint_ip)) {
 		// Start outbound connection to peer
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("log"), MP_OBJ_NEW_STR("connecting wireguard..."));
-		wireguardif_connect(wg_netif, wireguard_peer_index);
+		err_t connect_result = wireguardif_connect(wg_netif, wireguard_peer_index);
+		const char* connect_result_str = lwip_strerr(connect_result);
+		mp_obj_dict_store(result, MP_OBJ_NEW_STR("connect_result"), mp_obj_new_str(connect_result_str, strlen(connect_result_str)));
 		// Save the current default interface for restoring when shutting down the WG interface.
 		previous_default_netif = netif_default;
 		// Set default interface to WG device.
