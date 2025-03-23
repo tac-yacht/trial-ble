@@ -1,7 +1,7 @@
 // Include MicroPython API.
 #include "py/runtime.h"
 #include <string.h>
-#include "lwip/ip_addr.h"
+#include "wireguardif.h"
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
