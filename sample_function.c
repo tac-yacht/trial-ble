@@ -100,13 +100,34 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 		lwip_freeaddrinfo(res);
 
 		peer.endpoint_ip = endpoint_ip;
-		mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(endpoint_ip));
 		break;
 	}
 	if( !success_get_endpoint_ip  ) {
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("error_log"), MP_OBJ_NEW_STR("failed to get endpoint ip."));
 		return result;
 	}
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(endpoint_ip));
+
+	// Register the new WireGuard network interface with lwIP
+	wg_netif = netif_add(&wg_netif_struct, ip_2_ip4(&ipaddr), ip_2_ip4(&netmask), ip_2_ip4(&gateway), &wg, &wireguardif_init, &ip_input);
+	if( wg_netif == NULL ) {
+		mp_obj_dict_store(result, MP_OBJ_NEW_STR("error_log"), MP_OBJ_NEW_STR("failed to initialize WG netif."));
+		return result;
+	}
+	// Mark the interface as administratively up, link up flag is set automatically when peer connects
+	netif_set_up(wg_netif);
+
+	peer.public_key = remotePeerPublicKey;
+	peer.preshared_key = NULL;
+	// Allow all IPs through tunnel
+	{
+		ip_addr_t allowed_ip = IPADDR4_INIT_BYTES(0, 0, 0, 0);
+		peer.allowed_ip = allowed_ip;
+		ip_addr_t allowed_mask = IPADDR4_INIT_BYTES(0, 0, 0, 0);
+		peer.allowed_mask = allowed_mask;
+	}
+	
+	peer.endport_port = remotePeerPort;
 
 	return result;
 };
