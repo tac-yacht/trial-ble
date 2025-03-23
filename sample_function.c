@@ -31,6 +31,7 @@ static struct netif wg_netif_struct = {0};
 static struct netif *wg_netif = NULL;
 static struct netif *previous_default_netif = NULL;
 static uint8_t wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
+static bool is_initialized = false;
 
 static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
@@ -130,6 +131,22 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	
 	peer.endport_port = remote_peer_port;
 
+    // Initialize the platform
+    wireguard_platform_init();
+	// Register the new WireGuard peer with the netwok interface
+	wireguardif_add_peer(wg_netif, &peer, &wireguard_peer_index);
+	if ((wireguard_peer_index != WIREGUARDIF_INVALID_INDEX) && !ip_addr_isany(&peer.endpoint_ip)) {
+		// Start outbound connection to peer
+		mp_obj_dict_store(result, MP_OBJ_NEW_STR("log"), MP_OBJ_NEW_STR("connecting wireguard..."));
+		wireguardif_connect(wg_netif, wireguard_peer_index);
+		// Save the current default interface for restoring when shutting down the WG interface.
+		previous_default_netif = netif_default;
+		// Set default interface to WG device.
+        netif_set_default(wg_netif);
+	}
+
+	is_initialized = true;
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("log"), MP_OBJ_NEW_STR("connected!"));
 	return result;
 };
 
