@@ -69,7 +69,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_new_str(remote_peer_address, strlen(remote_peer_address)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("ネーム解決テスト中"));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("ホスト名解決テスト中"));
 
 	struct wireguardif_init_data wg;
 	struct wireguardif_peer peer;
@@ -100,14 +100,13 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 		lwip_freeaddrinfo(res);
 
 		peer.endpoint_ip = endpoint_ip;
+		mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(endpoint_ip));
 		break;
 	}
 	if( !success_get_endpoint_ip  ) {
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("error_log"), MP_OBJ_NEW_STR("failed to get endpoint ip."));
-		return false;
+		return result;
 	}
-	
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(peer.endpoint_ip));
 
 	return result;
 };
