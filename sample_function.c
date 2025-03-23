@@ -55,6 +55,16 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
 	int remote_peer_port = args[6].u_int;
 
+	mp_obj_dict_t *result = mp_obj_new_dict(0);
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(geteway));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_from_ipaddr(remote_peer_address));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("デフォルト値設定テスト中"));
+
 	struct wireguardif_init_data wg;
 	struct wireguardif_peer peer;
 
@@ -67,15 +77,6 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	// Initialise the first WireGuard peer structure
 	wireguardif_peer_init(&peer);
 	
-	mp_obj_dict_t *result = mp_obj_new_dict(0);
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(geteway));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_from_ipaddr(remote_peer_address));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("デフォルト値設定テスト中"));
 	return result;
 };
 
