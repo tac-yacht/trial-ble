@@ -5,6 +5,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
+#include "lwip/ip.h"
 #include "lwip/netdb.h"
 
 #include "WireGuard/src/wireguardif.h" //TODO 構成変更するとずれるので要検討
@@ -55,7 +56,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	//TODO バリデーション
 	ip_addr_t ipaddr = ipaddr_from_mp_arg(args[0]);
 	ip_addr_t netmask = ipaddr_from_mp_arg(args[1]);
-	ip_addr_t geteway = ipaddr_from_mp_arg(args[2]);
+	ip_addr_t gateway = ipaddr_from_mp_arg(args[2]);
 	const char *private_key = mp_obj_str_get_str(args[3].u_obj);
 	const char *remote_peer_address = mp_obj_str_get_str(args[4].u_obj);
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
@@ -64,12 +65,12 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	mp_obj_dict_t *result = mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(geteway));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(gateway));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_new_str(remote_peer_address, strlen(remote_peer_address)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("ホスト名解決テスト中"));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("初期設定テスト中"));
 
 	struct wireguardif_init_data wg;
 	struct wireguardif_peer peer;
@@ -106,7 +107,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("error_log"), MP_OBJ_NEW_STR("failed to get endpoint ip."));
 		return result;
 	}
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(endpoint_ip));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(peer.endpoint_ip));
 
 	// Register the new WireGuard network interface with lwIP
 	wg_netif = netif_add(&wg_netif_struct, ip_2_ip4(&ipaddr), ip_2_ip4(&netmask), ip_2_ip4(&gateway), &wg, &wireguardif_init, &ip_input);
