@@ -117,7 +117,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	// Mark the interface as administratively up, link up flag is set automatically when peer connects
 	netif_set_up(wg_netif);
 
-	peer.public_key = remotePeerPublicKey;
+	peer.public_key = remote_peer_public_key;
 	peer.preshared_key = NULL;
 	// Allow all IPs through tunnel
 	{
@@ -127,7 +127,7 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 		peer.allowed_mask = allowed_mask;
 	}
 	
-	peer.endport_port = remotePeerPort;
+	peer.endport_port = remote_peer_port;
 
 	return result;
 };
