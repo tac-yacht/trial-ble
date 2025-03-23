@@ -1,6 +1,12 @@
 // Include MicroPython API.
 #include "py/runtime.h"
 #include <string.h>
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#include "lwip/netdb.h"
+
 #include "WireGuard/src/wireguardif.h" //TODO 構成変更するとずれるので要検討
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
@@ -40,18 +46,18 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
 	//妥協のデフォルト設定（これなら下のバインドのところでやっても変わらないが、一応バインドとデフォルト設定は別にしておく
-    if (args[1].u_obj == MP_OBJ_NULL) { //subnet
-        args[1].u_obj = MP_OBJ_NEW_STR("255.255.255.255");
-    }
-    if (args[2].u_obj == MP_OBJ_NULL) { //gateway
-        args[2].u_obj = MP_OBJ_NEW_STR("0.0.0.0");
-    }
+	if (args[1].u_obj == MP_OBJ_NULL) { //subnet
+		args[1].u_obj = MP_OBJ_NEW_STR("255.255.255.255");
+	}
+	if (args[2].u_obj == MP_OBJ_NULL) { //gateway
+		args[2].u_obj = MP_OBJ_NEW_STR("0.0.0.0");
+	}
 	//TODO バリデーション
 	ip_addr_t ipaddr = ipaddr_from_mp_arg(args[0]);
 	ip_addr_t netmask = ipaddr_from_mp_arg(args[1]);
 	ip_addr_t geteway = ipaddr_from_mp_arg(args[2]);
 	const char *private_key = mp_obj_str_get_str(args[3].u_obj);
-	ip_addr_t remote_peer_address = ipaddr_from_mp_arg(args[4]);
+	const char *remote_peer_address = mp_obj_str_get_str(args[4].u_obj);
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
 	int remote_peer_port = args[6].u_int;
 
@@ -60,23 +66,49 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(geteway));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("private_key"), mp_obj_new_str(private_key, strlen(private_key)));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_from_ipaddr(remote_peer_address));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_address"), mp_obj_new_str(remote_peer_address, strlen(remote_peer_address)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
-	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("デフォルト値設定テスト中"));
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("ネーム解決テスト中"));
 
 	struct wireguardif_init_data wg;
 	struct wireguardif_peer peer;
 
 	// Setup the WireGuard device structure
 	wg.private_key = private_key;
-    wg.listen_port = remote_peer_port;
+	wg.listen_port = remote_peer_port;
 	
 	wg.bind_netif = NULL;
 
 	// Initialise the first WireGuard peer structure
 	wireguardif_peer_init(&peer);
+	// If we know the endpoint's address can add here
+	bool success_get_endpoint_ip = false;
+	for(int retry = 0; retry < 5; retry++) {
+		ip_addr_t endpoint_ip = IPADDR4_INIT_BYTES(0, 0, 0, 0);
+		struct addrinfo *res = NULL;
+		struct addrinfo hint;
+		memset(&hint, 0, sizeof(hint));
+		memset(&endpoint_ip, 0, sizeof(endpoint_ip));
+		if( lwip_getaddrinfo(remote_peer_address, NULL, &hint, &res) != 0 ) {
+			vTaskDelay(pdMS_TO_TICKS(2000));
+			continue;
+		}
+		success_get_endpoint_ip = true;
+		struct in_addr addr4 = ((struct sockaddr_in *) (res->ai_addr))->sin_addr;
+		inet_addr_to_ip4addr(ip_2_ip4(&endpoint_ip), &addr4);
+		lwip_freeaddrinfo(res);
+
+		peer.endpoint_ip = endpoint_ip;
+		break;
+	}
+	if( !success_get_endpoint_ip  ) {
+		mp_obj_dict_store(result, MP_OBJ_NEW_STR("error_log"), MP_OBJ_NEW_STR("failed to get endpoint ip."));
+		return false;
+	}
 	
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("endpoint_ip"), mp_obj_from_ipaddr(peer.endpoint_ip));
+
 	return result;
 };
 
