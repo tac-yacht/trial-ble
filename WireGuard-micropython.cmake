@@ -1,3 +1,5 @@
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLWIP_DEBUG=1")
+
 # Create an INTERFACE library for our CPP module.
 add_library(usermod_wireguard INTERFACE)
 
