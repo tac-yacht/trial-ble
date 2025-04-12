@@ -49,9 +49,6 @@ jobs:
     - name: patch
       run: |
         sed -i '/wireguard_create_cookie_reply/a void handshake_destroy(struct wireguard_handshake *handshake);' ${GITHUB_WORKSPACE}/WireGuard/src/wireguard.h
-        sed -i 's/#include "tcpip_adapter.h"/#include "esp_netif.h"/' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
-        sed -i '/esp_netif.h/a #include "esp_netif_net_stack.h"' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
-        sed -i 's/tcpip_adapter_get_netif(TCPIP_ADAPTER_IF_STA, &underlying_netif);/underlying_netif=esp_netif_get_netif_impl(esp_netif_get_handle_from_ifkey("WIFI_STA"));/' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/#include "esp32-hal-log.h"//' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/log_e(TAG/ESP_LOGE(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/log_w(TAG/ESP_LOGW(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
