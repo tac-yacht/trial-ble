@@ -48,7 +48,6 @@ jobs:
         ./install.sh >/dev/null
     - name: patch
       run: |
-        sed -i '/wireguard_create_cookie_reply/a void handshake_destroy(struct wireguard_handshake *handshake);' ${GITHUB_WORKSPACE}/WireGuard/src/wireguard.h
         sed -i 's/#include "esp32-hal-log.h"//' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/log_e(TAG/ESP_LOGE(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/log_w(TAG/ESP_LOGW(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
