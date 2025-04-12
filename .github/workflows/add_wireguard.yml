@@ -32,7 +32,8 @@ jobs:
     - name: checkout WireGuard-ESP32-Arduino
       uses: actions/checkout@v4
       with:
-        repository: ciniml/WireGuard-ESP32-Arduino
+        repository: tac-yacht/WireGuard-ESP32-Arduino
+        ref: patch
         path: WireGuard
     - name: install dependencies tools
       # https://micropython-docs-ja.readthedocs.io/ja/latest/develop/gettingstarted.html#required-dependencies
@@ -47,7 +48,6 @@ jobs:
         ./install.sh >/dev/null
     - name: patch
       run: |
-        sed -i 's/static void mul(fe out, const fe a, const fe b, unsigned nb) {/static void mul(fe out, const fe a, const limb_t b[], unsigned nb) {/' ${GITHUB_WORKSPACE}/WireGuard/src/crypto/refc/x25519.c
         sed -i '/wireguard_create_cookie_reply/a void handshake_destroy(struct wireguard_handshake *handshake);' ${GITHUB_WORKSPACE}/WireGuard/src/wireguard.h
         sed -i 's/#include "tcpip_adapter.h"/#include "esp_netif.h"/' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i '/esp_netif.h/a #include "esp_netif_net_stack.h"' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
