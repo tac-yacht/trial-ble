@@ -56,9 +56,6 @@ jobs:
         sed -i 's/log_v(TAG/ESP_LOGV(TAG,/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/%08x/%08lx/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
         sed -i 's/%ums\\r\\n/%" PRIu32 "ms/g' ${GITHUB_WORKSPACE}/WireGuard/src/wireguardif.c
-        sed -i '70,76d' ${GITHUB_WORKSPACE}/WireGuard/src/WireGuard.cpp
-        sed -i '/^\t*log_/d' ${GITHUB_WORKSPACE}/WireGuard/src/WireGuard.cpp
-        sed -i 's/#include "esp32-hal-log.h"//' ${GITHUB_WORKSPACE}/WireGuard/src/WireGuard.cpp
         cp ${GITHUB_WORKSPACE}/sdkconfig.lwipdebug ${GITHUB_WORKSPACE}/micropython/ports/esp32/boards/ESP32_GENERIC_C3/sdkconfig.lwipdebug
         sed -i '/set(SDKCONFIG_DEFAULTS/a boards/ESP32_GENERIC_C3/sdkconfig.lwipdebug' ${GITHUB_WORKSPACE}/micropython/ports/esp32/boards/ESP32_GENERIC_C3/mpconfigboard.cmake
     - name: build firmware
