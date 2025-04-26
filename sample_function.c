@@ -169,7 +169,7 @@ static mp_obj_t end() {
 	wireguardif_remove_peer(wg_netif, wireguard_peer_index);
 	wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
 	// Shutdown the wireguard interface.
-	//wireguardif_shutdown(wg_netif);
+	wireguardif_shutdown(wg_netif);
 	// Remove the WG interface;
 	//netif_remove(wg_netif);
 	wg_netif = NULL;
