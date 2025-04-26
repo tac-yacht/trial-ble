@@ -33,7 +33,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: tac-yacht/WireGuard-ESP32-Arduino
-        ref: main
+        ref: experimental_multiplatform
         path: WireGuard
     - name: install dependencies tools
       # https://micropython-docs-ja.readthedocs.io/ja/latest/develop/gettingstarted.html#required-dependencies
