@@ -164,7 +164,7 @@ static mp_obj_t end() {
 	netif_set_default(previous_default_netif);
 	previous_default_netif = NULL;
 	// Disconnect the WG interface.
-	//wireguardif_disconnect(wg_netif, wireguard_peer_index);
+	wireguardif_disconnect(wg_netif, wireguard_peer_index);
 	// Remove peer from the WG interface
 	//wireguardif_remove_peer(wg_netif, wireguard_peer_index);
 	//wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
