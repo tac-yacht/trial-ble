@@ -171,7 +171,7 @@ static mp_obj_t end() {
 	// Shutdown the wireguard interface.
 	wireguardif_shutdown(wg_netif);
 	// Remove the WG interface;
-	//netif_remove(wg_netif);
+	netif_remove(wg_netif);
 	wg_netif = NULL;
 
 	is_initialized = false;
