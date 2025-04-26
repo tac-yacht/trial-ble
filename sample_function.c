@@ -142,7 +142,6 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 		// Start outbound connection to peer
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("log"), MP_OBJ_NEW_STR("connecting wireguard..."));
 		err_t connect_result = wireguardif_connect(wg_netif, wireguard_peer_index);
-		printf("connect_result raw value: %d\n", connect_result);
 		const char* connect_result_str = lwip_strerr(connect_result);
 		mp_obj_dict_store(result, MP_OBJ_NEW_STR("connect_result"), mp_obj_new_str(connect_result_str, strlen(connect_result_str)));
 		// Save the current default interface for restoring when shutting down the WG interface.
@@ -158,6 +157,28 @@ static mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args
 
 static MP_DEFINE_CONST_FUN_OBJ_KW(begin_obj, 0, begin);
 
+static mp_obj_t end() {
+	if( !is_initialized ) return mp_const_none;
+
+	// Restore the default interface.
+	netif_set_default(previous_default_netif);
+	previous_default_netif = NULL;
+	// Disconnect the WG interface.
+	wireguardif_disconnect(wg_netif, wireguard_peer_index);
+	// Remove peer from the WG interface
+	wireguardif_remove_peer(wg_netif, wireguard_peer_index);
+	wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
+	// Shutdown the wireguard interface.
+	wireguardif_shutdown(wg_netif);
+	// Remove the WG interface;
+	netif_remove(wg_netif);
+	wg_netif = NULL;
+
+	is_initialized = false;
+	return mp_const_none;
+}
+static MP_DEFINE_CONST_FUN_OBJ_0(end_obj, end);
+
 // Define all attributes of the module.
 // Table entries are key/value pairs of the attribute name (a string)
 // and the MicroPython object reference.
@@ -166,6 +187,7 @@ static MP_DEFINE_CONST_FUN_OBJ_KW(begin_obj, 0, begin);
 static const mp_rom_map_elem_t wireguard_module_globals_table[] = {
 	{ MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_wireguard) },
 	{ MP_ROM_QSTR(MP_QSTR_begin), MP_ROM_PTR(&begin_obj) },
+	{ MP_ROM_QSTR(MP_QSTR_end), MP_ROM_PTR(&end_obj) },
 };
 static MP_DEFINE_CONST_DICT(wireguard_module_globals, wireguard_module_globals_table);
 
