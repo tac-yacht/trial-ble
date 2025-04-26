@@ -166,8 +166,8 @@ static mp_obj_t end() {
 	// Disconnect the WG interface.
 	wireguardif_disconnect(wg_netif, wireguard_peer_index);
 	// Remove peer from the WG interface
-	//wireguardif_remove_peer(wg_netif, wireguard_peer_index);
-	//wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
+	wireguardif_remove_peer(wg_netif, wireguard_peer_index);
+	wireguard_peer_index = WIREGUARDIF_INVALID_INDEX;
 	// Shutdown the wireguard interface.
 	//wireguardif_shutdown(wg_netif);
 	// Remove the WG interface;
