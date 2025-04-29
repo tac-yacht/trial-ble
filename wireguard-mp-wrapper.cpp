@@ -43,6 +43,7 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 }
 
 mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+	return mp_const_none;
 	init();
 
 	static const mp_arg_t allowed_args[] = {
@@ -67,7 +68,6 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
 	int remote_peer_port = args[6].u_int;
 
-	return mp_const_none;
 	mp_obj_dict_t *result = (mp_obj_dict_t *)mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
@@ -77,8 +77,8 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
 
-	// bool wg_result = instance->begin(ipaddr, netmask, gateway, private_key, remote_peer_address, remote_peer_public_key, remote_peer_port);
-	// mp_obj_dict_store(result, MP_OBJ_NEW_STR("result"), mp_obj_new_bool(wg_result));
+	bool wg_result = instance->begin(ipaddr, netmask, gateway, private_key, remote_peer_address, remote_peer_public_key, remote_peer_port);
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("result"), mp_obj_new_bool(wg_result));
 	return result;
 }
 
