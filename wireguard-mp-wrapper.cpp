@@ -4,7 +4,9 @@
 
 #include "lwip/ip.h"
 
-#include "WireGuard-ESP32.h"
+//TODO 構成変更するとずれるので要検討
+#include "WireGuard/src/WireGuard-ESP32.h"
+
 #include "Wireguardd-mp-wrapper.h"
 
 static WireGuard instance;
