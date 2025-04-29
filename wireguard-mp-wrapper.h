@@ -5,6 +5,7 @@ extern "C" {
 
 #include "py/runtime.h"
 #include "py/obj.h"
+#include "py/objstr.h"
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
