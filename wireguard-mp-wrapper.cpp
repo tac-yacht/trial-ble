@@ -1,6 +1,19 @@
 //TODO 構成変更するとずれるので要検討
 #include "WireGuard/src/WireGuard-ESP32.h"
-static WireGuard instance;
+
+static WireGuard* instance;
+void init() {
+	if(instance) return;
+
+	instance = new WireGuard();
+}
+
+void destroy() {
+	if(!instance) return;
+
+	delete instance;
+	instance = nullptr;
+}
 
 extern "C" {
 
@@ -29,6 +42,8 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 }
 
 mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+	init();
+
 	static const mp_arg_t allowed_args[] = {
 		{MP_QSTR_local_ip, MP_ARG_OBJ|MP_ARG_REQUIRED},
 		{MP_QSTR_subnet, MP_ARG_OBJ, {.u_obj = MP_OBJ_NULL}}, //あとで直接指定する方法を調べる
@@ -66,10 +81,13 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 }
 
 mp_obj_t end() {
+	if(instance) return mp_const_none;
 	instance.end();
+	destroy();
 	return mp_const_none;
 }
 mp_obj_t is_initialized() {
+	if(instance) return mp_obj_new_bool(false);
 	return mp_obj_new_bool(instance.is_initialized());
 }
 
