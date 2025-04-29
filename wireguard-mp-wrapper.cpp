@@ -43,7 +43,6 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 }
 
 mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
-	return mp_const_none;
 	init();
 
 	static const mp_arg_t allowed_args[] = {
