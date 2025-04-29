@@ -71,7 +71,7 @@ mp_obj_t end() {
 	return mp_const_none;
 }
 mp_obj_t is_initialized() {
-	return mp_obj_new_bool(instance.is_initialized()));
+	return mp_obj_new_bool(instance.is_initialized());
 }
 
 }
