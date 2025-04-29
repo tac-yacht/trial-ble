@@ -13,6 +13,7 @@ target_sources(usermod_wireguard INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/WireGuard.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/wireguardif.c
     ${CMAKE_CURRENT_LIST_DIR}/WireGuard/src/wireguard-platform.c
+    ${CMAKE_CURRENT_LIST_DIR}/wireguard-mp-wrapper.cpp
 )
 
 # Add the current directory as an include directory.
