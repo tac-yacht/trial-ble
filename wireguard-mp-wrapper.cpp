@@ -75,20 +75,21 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_public_key"), mp_obj_new_str(remote_peer_public_key, strlen(remote_peer_public_key)));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
 
-	bool wg_result = instance.begin(ipaddr, netmask, gateway, private_key, remote_peer_address, remote_peer_public_key, remote_peer_port);
+	bool wg_result = instance->begin(ipaddr, netmask, gateway, private_key, remote_peer_address, remote_peer_public_key, remote_peer_port);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("result"), mp_obj_new_bool(wg_result));
 	return result;
 }
 
 mp_obj_t end() {
 	if(instance) return mp_const_none;
-	instance.end();
+	instance->end();
 	destroy();
 	return mp_const_none;
 }
+
 mp_obj_t is_initialized() {
 	if(instance) return mp_obj_new_bool(false);
-	return mp_obj_new_bool(instance.is_initialized());
+	return mp_obj_new_bool(instance->is_initialized());
 }
 
 }
