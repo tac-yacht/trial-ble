@@ -7,7 +7,7 @@
 //TODO 構成変更するとずれるので要検討
 #include "WireGuard/src/WireGuard-ESP32.h"
 
-#include "Wireguardd-mp-wrapper.h"
+#include "wireguard-mp-wrapper.h"
 
 static WireGuard instance;
 
