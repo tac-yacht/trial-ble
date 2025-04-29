@@ -51,7 +51,7 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
 	int remote_peer_port = args[6].u_int;
 
-	mp_obj_dict_t *result = MP_OBJ_TO_PTR(mp_obj_new_dict(0));
+	mp_obj_dict_t *result = (mp_obj_dict_t *)mp_obj_new_dict(0);
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("local_ip"), mp_obj_from_ipaddr(ipaddr));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("netmask"), mp_obj_from_ipaddr(netmask));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("geteway"), mp_obj_from_ipaddr(gateway));
