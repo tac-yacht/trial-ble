@@ -28,10 +28,15 @@ extern "C" {
 
 //utility
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
-	//TODO バリデーション
+	if (arg == NULL || arg.u_obj == NULL || !mp_obj_is_str(arg.u_obj)) {
+		nlr_raise(mp_obj_new_exception_msg(&mp_type_ValueError, "expected a string IP address"));
+	}
+
 	const char *ipaddr_str = mp_obj_str_get_str(arg.u_obj);
 	ip_addr_t result;
-	ipaddr_aton(ipaddr_str, &result);
+	if(!ipaddr_aton(ipaddr_str, &result)) {
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "invalid IP [raw value: %s]", ipaddr_str));
+	}
 	
 	return result;
 }
