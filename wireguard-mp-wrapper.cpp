@@ -1,15 +1,16 @@
+//TODO 構成変更するとずれるので要検討
+#include "WireGuard/src/WireGuard-ESP32.h"
+static WireGuard instance;
+
+extern "C" {
+
 // Include MicroPython API.
 #include "py/runtime.h"
 #include "py/obj.h"
 
 #include "lwip/ip.h"
 
-//TODO 構成変更するとずれるので要検討
-#include "WireGuard/src/WireGuard-ESP32.h"
-
 #include "wireguard-mp-wrapper.h"
-
-static WireGuard instance;
 
 #define MP_OBJ_NEW_STR(str) mp_obj_new_str(str, sizeof(str) - 1)
 
@@ -26,8 +27,6 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	const char *ipaddr_str = ipaddr_ntoa(&src);
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
 }
-
-extern "C" {
 
 mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	static const mp_arg_t allowed_args[] = {
