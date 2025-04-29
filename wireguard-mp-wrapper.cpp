@@ -59,6 +59,13 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	mp_arg_val_t args[MP_ARRAY_SIZE(allowed_args)];
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(allowed_args), allowed_args, args);
 
+	//妥協のデフォルト設定（これなら下のバインドのところでやっても変わらないが、一応バインドとデフォルト設定は別にしておく
+	if (args[1].u_obj == MP_OBJ_NULL) { //subnet
+		args[1].u_obj = MP_OBJ_NEW_STR("255.255.255.255");
+	}
+	if (args[2].u_obj == MP_OBJ_NULL) { //gateway
+		args[2].u_obj = MP_OBJ_NEW_STR("0.0.0.0");
+	}
 	//TODO バリデーション
 	ip_addr_t ipaddr = ipaddr_from_mp_arg(args[0]);
 	ip_addr_t netmask = ipaddr_from_mp_arg(args[1]);
