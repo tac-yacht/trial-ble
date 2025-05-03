@@ -1,4 +1,5 @@
 #include <string>
+#include <format>
 extern "C" {
 // Include MicroPython API.
 #include "py/runtime.h"
