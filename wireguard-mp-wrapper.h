@@ -20,6 +20,7 @@ const mp_arg_t begin_allowed_args[] = {
 	{MP_QSTR_remote_peer_address, MP_ARG_OBJ|MP_ARG_REQUIRED},
 	{MP_QSTR_remote_peer_public_key, MP_ARG_OBJ|MP_ARG_REQUIRED},
 	{MP_QSTR_remote_peer_port, MP_ARG_INT|MP_ARG_REQUIRED},
+	{ MP_QSTR_dry_run, MP_ARG_BOOL, {.u_bool = false} },
 };
 
 /*None*/
