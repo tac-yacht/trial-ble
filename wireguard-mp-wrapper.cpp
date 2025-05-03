@@ -1,6 +1,8 @@
+extern "C" {
 // Include MicroPython API.
 #include "py/runtime.h"
 #include "py/obj.h"
+}
 
 #include "lwip/ip.h"
 
