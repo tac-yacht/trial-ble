@@ -13,9 +13,6 @@ extern "C" {
 #include "wireguard-mp-wrapper.h"
 
 //utility
-static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
-	return ipaddr_from_mp_arg(arg, std::string());
-}
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
 	if (arg.u_obj == nullptr || !mp_obj_is_str(arg.u_obj)) {
 		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected a string IP address", kw_name.c_str()));
@@ -28,6 +25,9 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name
 	}
 	
 	return result;
+}
+static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
+	return ipaddr_from_mp_arg(arg, std::string());
 }
 static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	const char *ipaddr_str = ipaddr_ntoa(&src);
