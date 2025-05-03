@@ -46,7 +46,7 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
  * begin専用
  */
 static ip_addr_t get_ip(mp_arg_val_t *args, int index) {
-	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].name)));
+	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].qst)));
 }
 
 
