@@ -1,5 +1,4 @@
 #include <string>
-#include <format>
 extern "C" {
 // Include MicroPython API.
 #include "py/runtime.h"
@@ -24,17 +23,17 @@ extern "C" {
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
 	std::string prefix = "";
 	if (!kw_name.empty()) {
-		prefix = std::format("'{}' ", kw_name);
+		prefix = "'" + kw_name + "' ";
 	}
 
 	if (arg.u_obj == nullptr || !mp_obj_is_str(arg.u_obj)) {
-		nlr_raise(mp_obj_new_exception_msg(&mp_type_TypeError, std::format("{}expected a string IP address", prefix).c_str()));
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError, "%sexpected a string IP address", prefix.c_str()));
 	}
 
 	const char *ipaddr_str = mp_obj_str_get_str(arg.u_obj);
 	ip_addr_t result;
 	if(!ipaddr_aton(ipaddr_str, &result)) {
-		nlr_raise(mp_obj_new_exception_msg(&mp_type_ValueError, std::format("{}invalid IP [raw value: {}]", prefix, ipaddr_str).c_str()));
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sinvalid IP [raw value: %s]", prefix.c_str(), ipaddr_str));
 	}
 	
 	return result;
