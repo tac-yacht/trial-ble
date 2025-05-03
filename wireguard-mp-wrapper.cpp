@@ -116,10 +116,13 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("remote_peer_port"), mp_obj_new_int(remote_peer_port));
 	mp_obj_dict_store(result, MP_OBJ_NEW_STR("memo"), MP_OBJ_NEW_STR("キーのバリデーション追加中"));
 
-	if(args[7].u_bool) {
-		bool wg_result = instance->begin(ipaddr, netmask, gateway, private_key, remote_peer_address, remote_peer_public_key, remote_peer_port);
-		mp_obj_dict_store(result, MP_OBJ_NEW_STR("result"), mp_obj_new_bool(wg_result));
+	if(args[7].u_bool) { //dry_run=Trueの時
+		//接続処理せずに終える
+		return result;
 	}
+
+	bool wg_result = instance->begin(ipaddr, netmask, gateway, private_key, remote_peer_address, remote_peer_public_key, remote_peer_port);
+	mp_obj_dict_store(result, MP_OBJ_NEW_STR("result"), mp_obj_new_bool(wg_result));
 
 	return result;
 }
