@@ -45,7 +45,7 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 }
 
 static mp_obj_t b64decode(const std::string& s) {
-	mp_obj_t s_mp = mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
+	mp_obj_t s_mp = mp_obj_new_str(s.c_str(), s.length());
 
 	// binasciiモジュールをインポート
 	mp_obj_t binascii_module = mp_import_name(MP_QSTR_binascii, mp_const_none, MP_OBJ_NEW_SMALL_INT(0));
