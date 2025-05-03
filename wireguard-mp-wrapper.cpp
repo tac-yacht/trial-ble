@@ -63,7 +63,7 @@ static const char* b2a_base64(mp_obj_t s) {
 	mp_obj_t b2a_base64_func = mp_load_attr(binascii_module, MP_QSTR_b2a_base64);
 	
 	// エンコードを呼び出し 第二引数は改行の有無
-	mp_obj_t result = mp_call_function_1(b2a_base64_func, s, mp_obj_new_bool(false));
+	mp_obj_t result = mp_call_function_2(b2a_base64_func, s, mp_obj_new_bool(false));
 	return mp_obj_str_get_str(mp_call_function_0(mp_load_attr(result, MP_QSTR_decode)));
 }
 
