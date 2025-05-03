@@ -13,6 +13,13 @@ extern "C" {
 #include "wireguard-mp-wrapper.h"
 
 //utility
+/**
+ * 汎用関数
+ * @brief Python引数から、lwipの型へ変換する
+ * 変換失敗時はPythonの例外が投げられる
+ * @param arg 変換するPython引数(文字列)
+ * @param key_name キーワード名(無ければ空文字を指定)
+ */
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
 	if (arg.u_obj == nullptr || !mp_obj_is_str(arg.u_obj)) {
 		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected a string IP address", kw_name.c_str()));
@@ -26,12 +33,20 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name
 	
 	return result;
 }
-static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
-	return ipaddr_from_mp_arg(arg, std::string());
+static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t args, int index) {
+	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[i].name)));
 }
 static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	const char *ipaddr_str = ipaddr_ntoa(&src);
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
+}
+
+//helper
+/**
+ * begin専用
+ */
+static ip_addr_t get_ip(mp_arg_val_t args, int index) {
+	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[i].name)));
 }
 
 
@@ -59,9 +74,9 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	mp_arg_parse_all(n_args, pos_args, kw_args, MP_ARRAY_SIZE(begin_allowed_args), begin_allowed_args, args);
 
 	//TODO バリデーション
-	ip_addr_t ipaddr = ipaddr_from_mp_arg(args[0]);
-	ip_addr_t netmask = ipaddr_from_mp_arg(args[1]);
-	ip_addr_t gateway = ipaddr_from_mp_arg(args[2]);
+	ip_addr_t ipaddr = get_ip(args, 0);
+	ip_addr_t netmask = get_ip(args, 1);
+	ip_addr_t gateway = get_ip(args, 2);
 	const char *private_key = mp_obj_str_get_str(args[3].u_obj);
 	const char *remote_peer_address = mp_obj_str_get_str(args[4].u_obj);
 	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
