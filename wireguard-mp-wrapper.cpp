@@ -21,14 +21,19 @@ extern "C" {
  * @param key_name キーワード名(無ければ空文字を指定)
  */
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
+	std::string prefix = "";
+	if (!kw_name.empty()) {
+		prefix = std::format("'{}' ", kw_name);
+	}
+
 	if (arg.u_obj == nullptr || !mp_obj_is_str(arg.u_obj)) {
-		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected a string IP address", kw_name.c_str()));
+		nlr_raise(mp_obj_new_exception_msg(&mp_type_TypeError, std::format("{}expected a string IP address", prefix).c_str()));
 	}
 
 	const char *ipaddr_str = mp_obj_str_get_str(arg.u_obj);
 	ip_addr_t result;
 	if(!ipaddr_aton(ipaddr_str, &result)) {
-		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sinvalid IP [raw value: %s]", kw_name.c_str(), ipaddr_str));
+		nlr_raise(mp_obj_new_exception_msg(&mp_type_ValueError, std::format("{}invalid IP [raw value: {}]", prefix, ipaddr_str).c_str()));
 	}
 	
 	return result;
