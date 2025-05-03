@@ -44,7 +44,10 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
 }
 
-static mp_obj_t b64decode(const std::string& s) {
+static bool mp_obj_is_bytes(mp_obj_t o) {
+	return mp_obj_is_type(o, &mp_type_bytes);
+}
+static mp_obj_t a2b_base64(const std::string& s) {
 	mp_obj_t s_mp = mp_obj_new_str(s.c_str(), s.length());
 
 	// binasciiモジュールをインポート
@@ -54,15 +57,28 @@ static mp_obj_t b64decode(const std::string& s) {
 	// b64decodeを呼び出し
 	return mp_call_function_1(a2b_base64_func, s_mp);
 }
+static const char* b2a_base64(mp_obj_t s) {
+	// binasciiモジュールをインポート
+	mp_obj_t binascii_module = mp_import_name(MP_QSTR_binascii, mp_const_none, MP_OBJ_NEW_SMALL_INT(0));
+	mp_obj_t a2b_base64_func = mp_load_attr(binascii_module, MP_QSTR_a2b_base64);
+	
+	// b64decodeを呼び出し
+	return mp_obj_str_get_str(mp_call_function_1(a2b_base64_func, s_mp));
+}
+
 static const char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
 	std::string prefix = "";
 	if (!kw_name.empty()) {
 		prefix = "'" + kw_name + "' ";
 	}
 
-	const char *raw = mp_obj_str_get_str(arg.u_obj);
+	if (arg.u_obj == nullptr || !mp_obj_is_str_or_bytes(arg.u_obj)) {
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError, "%sexpected a string or bytes", prefix.c_str()));
+	}
 
-	mp_obj_t decode_result = b64decode(std::string(raw));
+	const char *raw = mp_obj_is_str(arg.u_obj)? mp_obj_str_get_str(arg.u_obj) : b2a_base64(arg.u_obj);
+
+	mp_obj_t decode_result = mp_obj_is_str(arg.u_obj)? a2b_base64(std::string(raw)) : arg.u_obj;
 	const size_t key_length = 32;
 	const size_t result_length = mp_obj_get_int(mp_obj_len(decode_result));
 	if(result_length != key_length) {
