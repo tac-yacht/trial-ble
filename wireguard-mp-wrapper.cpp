@@ -54,7 +54,7 @@ static mp_obj_t b64decode(const std::string& s) {
 	// b64decodeを呼び出し
 	return mp_call_function_1(b64decode_func, s_mp);
 }
-static char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
+static const char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
 	const char *raw = mp_obj_str_get_str(arg.u_obj);
 
 	mp_obj_t decode_result = b64decode(std::string(raw));
@@ -69,7 +69,7 @@ static ip_addr_t get_ip(mp_arg_val_t *args, int index) {
 	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].qst)));
 }
 
-static char* get_key(mp_arg_val_t *args, int index) {
+static const char* get_key(mp_arg_val_t *args, int index) {
 	return key_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].qst)));
 }
 
