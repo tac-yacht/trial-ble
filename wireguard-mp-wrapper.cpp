@@ -33,8 +33,8 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name
 	
 	return result;
 }
-static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t args, int index) {
-	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[i].name)));
+static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
+	return ipaddr_from_mp_arg(arg, std::string());
 }
 static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	const char *ipaddr_str = ipaddr_ntoa(&src);
@@ -45,8 +45,8 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 /**
  * begin専用
  */
-static ip_addr_t get_ip(mp_arg_val_t args, int index) {
-	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[i].name)));
+static ip_addr_t get_ip(mp_arg_val_t *args, int index) {
+	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].name)));
 }
 
 
