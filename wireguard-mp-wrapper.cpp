@@ -28,7 +28,7 @@ extern "C" {
 
 //utility
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
-	if (arg == NULL || arg.u_obj == NULL || !mp_obj_is_str(arg.u_obj)) {
+	if (arg.u_obj == NULL || !mp_obj_is_str(arg.u_obj)) {
 		nlr_raise(mp_obj_new_exception_msg(&mp_type_ValueError, "expected a string IP address"));
 	}
 
