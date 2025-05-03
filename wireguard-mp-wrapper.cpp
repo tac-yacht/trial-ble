@@ -60,10 +60,10 @@ static mp_obj_t a2b_base64(const std::string& s) {
 static const char* b2a_base64(mp_obj_t s) {
 	// binasciiモジュールをインポート
 	mp_obj_t binascii_module = mp_import_name(MP_QSTR_binascii, mp_const_none, MP_OBJ_NEW_SMALL_INT(0));
-	mp_obj_t a2b_base64_func = mp_load_attr(binascii_module, MP_QSTR_a2b_base64);
+	mp_obj_t b2a_base64_func = mp_load_attr(binascii_module, MP_QSTR_a2b_base64);
 	
 	// b64decodeを呼び出し
-	return mp_obj_str_get_str(mp_call_function_1(a2b_base64_func, s_mp));
+	return mp_obj_str_get_str(mp_call_function_1(b2a_base64_func, s));
 }
 
 static const char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
