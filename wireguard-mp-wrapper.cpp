@@ -38,9 +38,6 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name
 	
 	return result;
 }
-static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
-	return ipaddr_from_mp_arg(arg, std::string());
-}
 static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	const char *ipaddr_str = ipaddr_ntoa(&src);
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
