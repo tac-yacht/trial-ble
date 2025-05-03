@@ -49,7 +49,7 @@ static mp_obj_t b64decode(const std::string& s) {
 
 	// binasciiモジュールをインポート
 	mp_obj_t binascii_module = mp_import_name(MP_QSTR_binascii, mp_const_none, MP_OBJ_NEW_SMALL_INT(0));
-	mp_obj_t b64decode_func = mp_load_attr(binascii_module, MP_QSTR_b64decode);
+	mp_obj_t b64decode_func = mp_load_attr(binascii_module, MP_QSTR_a2b_base64);
 	
 	// b64decodeを呼び出し
 	return mp_call_function_1(b64decode_func, s_mp);
