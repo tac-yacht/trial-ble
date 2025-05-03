@@ -18,7 +18,7 @@ static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg) {
 }
 static ip_addr_t ipaddr_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
 	if (arg.u_obj == nullptr || !mp_obj_is_str(arg.u_obj)) {
-		nlr_raise(mp_obj_new_exception_msg(&mp_type_ValueError, "%sexpected a string IP address", kw_name.c_str()));
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected a string IP address", kw_name.c_str()));
 	}
 
 	const char *ipaddr_str = mp_obj_str_get_str(arg.u_obj);
