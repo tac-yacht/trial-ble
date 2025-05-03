@@ -63,7 +63,8 @@ static const char* b2a_base64(mp_obj_t s) {
 	mp_obj_t b2a_base64_func = mp_load_attr(binascii_module, MP_QSTR_a2b_base64);
 	
 	// b64decodeを呼び出し
-	return mp_obj_str_get_str(mp_call_function_1(b2a_base64_func, s));
+	mp_obj_t result = mp_call_function_1(b2a_base64_func, s);
+	return mp_call_function_0(mp_load_attr(result, MP_QSTR_decode));
 }
 
 static const char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
