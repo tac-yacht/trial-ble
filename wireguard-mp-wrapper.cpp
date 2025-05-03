@@ -63,8 +63,8 @@ static const char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name)
 	const char *raw = mp_obj_str_get_str(arg.u_obj);
 
 	mp_obj_t decode_result = b64decode(std::string(raw));
-	const int key_length = 32;
-	const int result_length = mp_obj_len(decode_result);
+	const size_t key_length = 32;
+	const size_t result_length = mp_obj_get_int(mp_obj_len(decode_result));
 	if(result_length != key_length) {
 		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected key length is %d bytes. [actual: %d]", prefix.c_str(), key_length, result_length));
 	}
