@@ -3,6 +3,7 @@ extern "C" {
 // Include MicroPython API.
 #include "py/runtime.h"
 #include "py/obj.h"
+#include "py/objstr.h"
 }
 
 #include "lwip/ip.h"
@@ -43,12 +44,33 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 	return mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
 }
 
+static mp_obj_t b64decode(const std::string& s) {
+	mp_obj_t s_mp = mp_obj_new_str(ipaddr_str, strlen(ipaddr_str));
+
+	// binasciiモジュールをインポート
+	mp_obj_t binascii_module = mp_import_name(MP_QSTR_binascii, mp_const_none, MP_OBJ_NEW_SMALL_INT(0));
+	mp_obj_t b64decode_func = mp_load_attr(binascii_module, MP_QSTR_b64decode);
+	
+	// b64decodeを呼び出し
+	return mp_call_function_1(b64decode_func, s_mp);
+}
+static char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name) {
+	const char *raw = mp_obj_str_get_str(arg.u_obj);
+
+	mp_obj_t decode_result = b64decode(std::string(raw));
+	return raw;
+}
+
 //helper
 /**
  * begin専用
  */
 static ip_addr_t get_ip(mp_arg_val_t *args, int index) {
 	return ipaddr_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].qst)));
+}
+
+static char* get_key(mp_arg_val_t *args, int index) {
+	return key_from_mp_arg(args[index], std::string(qstr_str(begin_allowed_args[index].qst)));
 }
 
 
@@ -79,9 +101,9 @@ mp_obj_t begin(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
 	ip_addr_t ipaddr = get_ip(args, 0);
 	ip_addr_t netmask = get_ip(args, 1);
 	ip_addr_t gateway = get_ip(args, 2);
-	const char *private_key = mp_obj_str_get_str(args[3].u_obj);
+	const char *private_key = get_key(args, 3);
 	const char *remote_peer_address = mp_obj_str_get_str(args[4].u_obj);
-	const char *remote_peer_public_key = mp_obj_str_get_str(args[5].u_obj);
+	const char *remote_peer_public_key = get_key(args, 5);
 	int remote_peer_port = args[6].u_int;
 
 	mp_obj_dict_t *result = (mp_obj_dict_t *)mp_obj_new_dict(0);
