@@ -47,6 +47,9 @@ static mp_obj_t mp_obj_from_ipaddr(ip_addr_t src) {
 static bool mp_obj_is_bytes(mp_obj_t o) {
 	return mp_obj_is_type(o, &mp_type_bytes);
 }
+static size_t mp_obj_get_length(mp_obj_t o) {
+	return mp_obj_get_int(mp_obj_len(o));
+}
 static mp_obj_t a2b_base64(const std::string& s) {
 	mp_obj_t s_mp = mp_obj_new_str(s.c_str(), s.length());
 
@@ -76,12 +79,23 @@ static const char* key_from_mp_arg(mp_arg_val_t arg, const std::string& kw_name)
 	if (arg.u_obj == nullptr || !mp_obj_is_str_or_bytes(arg.u_obj)) {
 		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError, "%sexpected a string or bytes", prefix.c_str()));
 	}
+	if (mp_obj_get_length(arg.u_obj)==0) {
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_TypeError, "%sexpected not empty", prefix.c_str()));
+	}
 
 	const char *raw = mp_obj_is_str(arg.u_obj)? mp_obj_str_get_str(arg.u_obj) : b2a_base64(arg.u_obj);
 
-	mp_obj_t decode_result = mp_obj_is_str(arg.u_obj)? a2b_base64(std::string(raw)) : arg.u_obj;
+	mp_obj_t decode_result = nullptr;
+	nlr_buf_t nlr;
+	if (nlr_push(&nlr) == 0) {
+		decode_result = mp_obj_is_str(arg.u_obj)? a2b_base64(std::string(raw)) : arg.u_obj;
+		nlr_pop();
+	} else {
+		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected Base64 [raw value: %s]", prefix.c_str(), mp_obj_str_get_str(arg.u_obj)));
+	}
+
 	const size_t key_length = 32;
-	const size_t result_length = mp_obj_get_int(mp_obj_len(decode_result));
+	const size_t result_length = mp_obj_get_length(decode_result);
 	if(result_length != key_length) {
 		nlr_raise(mp_obj_new_exception_msg_varg(&mp_type_ValueError, "%sexpected key length is %d bytes. [actual: %d]", prefix.c_str(), key_length, result_length));
 	}
