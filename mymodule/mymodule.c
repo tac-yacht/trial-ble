@@ -20,7 +20,7 @@ static MP_DEFINE_CONST_FUN_OBJ_KW(greet_obj, 0, greet);
 static const mp_rom_map_elem_t mymodule_globals_table[] = {
     { MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_mymodule) },
     { MP_ROM_QSTR(MP_QSTR_greet), MP_ROM_PTR(&greet_obj) }
-}
+};
 static MP_DEFINE_CONST_DICT(mymodule_globals, mymodule_globals_table);
 
 const mp_obj_module_t my_cmodule = {
