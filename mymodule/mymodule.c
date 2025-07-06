@@ -13,7 +13,7 @@ mp_obj_t greet(size_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
   char message[50];
   snprintf(message, sizeof(message), "Hello, %s!", name);
 
-  return mp_obj_new_str(mesage, strlen(mesage)));
+  return mp_obj_new_str(message, strlen(message));
 }
 
 static MP_DEFINE_CONST_FUN_OBJ_KW(greet_obj, 0, greet);
